@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useProjects } from "../../context/ProjectContext";
+import { useProjects } from "../../hooks/useProjects";
 import { taskService } from "../../api";
 import { ROUTES } from "../../config/routes";
 import TaskList from "../../components/task/TaskList";

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useProjects } from "../../context/ProjectContext";
+import { useProjects } from "../../hooks/useProjects";
 import { ROUTES } from "../../config/routes";
 import { projectService } from "../../api/services/project.service";
 import Button from "../../components/common/Button";

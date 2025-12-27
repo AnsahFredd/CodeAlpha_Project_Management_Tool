@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useProjects } from "../../context/ProjectContext";
+import { useProjects } from "../../hooks/useProjects";
 import { taskService } from "../../api";
 import { ROUTES } from "../../config/routes";
 import Button from "../../components/common/Button";
@@ -21,6 +21,7 @@ import {
 } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 import Card from "../../components/common/Card";
+import type { Project } from "../../interfaces";
 
 export default function CreateTask() {
   const navigate = useNavigate();
@@ -122,7 +123,10 @@ export default function CreateTask() {
                 label="Project"
                 placeholder="Select project"
                 required
-                data={projects.map((p) => ({ value: p._id, label: p.name }))}
+                data={projects.map((p: Project) => ({
+                  value: p._id,
+                  label: p.name,
+                }))}
                 {...form.getInputProps("project")}
                 leftSection={<FolderKanban size={16} />}
               />

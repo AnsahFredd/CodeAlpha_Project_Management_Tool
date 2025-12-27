@@ -1,12 +1,13 @@
 import { useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { useProjects } from "../../context/ProjectContext";
+import { useProjects } from "../../hooks/useProjects";
 import { ROUTES } from "../../config/routes";
 import { Plus, Search, Filter } from "lucide-react";
 import Button from "../../components/common/Button";
 import Loading from "../../components/common/Loading";
 import ProjectCard from "../../components/project/ProjectCard";
 import { PROJECT_STATUS_LABELS } from "../../utils/contants";
+import type { Project } from "../../interfaces";
 import {
   Title,
   Text,
@@ -33,14 +34,16 @@ export default function Projects() {
 
     if (searchTerm) {
       filtered = filtered.filter(
-        (project) =>
+        (project: Project) =>
           project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           project.description?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
     if (statusFilter !== "all") {
-      filtered = filtered.filter((project) => project.status === statusFilter);
+      filtered = filtered.filter(
+        (project: Project) => project.status === statusFilter
+      );
     }
 
     return filtered;
@@ -116,7 +119,7 @@ export default function Projects() {
         </Paper>
       ) : (
         <SimpleGrid cols={{ base: 1, md: 2, lg: 3 }} spacing="lg">
-          {filteredProjects.map((project) => (
+          {filteredProjects.map((project: Project) => (
             <ProjectCard key={project._id} project={project} />
           ))}
         </SimpleGrid>
