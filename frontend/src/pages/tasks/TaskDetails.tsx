@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { taskService, projectService } from "../../api";
 import { ROUTES } from "../../config/routes";
@@ -31,13 +31,7 @@ export default function TaskDetails() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (id) {
-      fetchTask();
-    }
-  }, [id]);
-
-  const fetchTask = async () => {
+  const fetchTask = useCallback(async () => {
     if (!id) return;
 
     setLoading(true);
@@ -64,7 +58,13 @@ export default function TaskDetails() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
+
+  useEffect(() => {
+    if (id) {
+      fetchTask();
+    }
+  }, [id, fetchTask]);
 
   const handleDelete = async () => {
     if (!id || !confirm("Are you sure you want to delete this task?")) return;
@@ -176,10 +176,12 @@ export default function TaskDetails() {
           </div>
         </Group>
         <Group>
-          <Button variant="outline" size="sm">
-            <Edit size={14} style={{ marginRight: 6 }} />
-            Edit
-          </Button>
+          <Link to={ROUTES.EDIT_TASK(task._id)}>
+            <Button variant="outline" size="sm">
+              <Edit size={14} style={{ marginRight: 6 }} />
+              Edit
+            </Button>
+          </Link>
           <Button variant="danger" size="sm" onClick={handleDelete}>
             <Trash2 size={14} style={{ marginRight: 6 }} />
             Delete

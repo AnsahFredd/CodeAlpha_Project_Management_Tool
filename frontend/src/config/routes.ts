@@ -17,6 +17,7 @@ export const ROUTES = {
   // Tasks
   TASKS: "/tasks",
   TASK_DETAIL: (id: string) => `/tasks/${id}`,
+  EDIT_TASK: (id: string) => `/tasks/${id}/edit`,
   CREATE_TASK: "/tasks/create",
 
   // Teams

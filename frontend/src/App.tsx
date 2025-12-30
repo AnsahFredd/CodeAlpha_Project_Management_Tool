@@ -25,6 +25,7 @@ import EditProject from "./pages/projects/EditProject";
 import Tasks from "./pages/tasks/Tasks";
 import TaskDetails from "./pages/tasks/TaskDetails";
 import CreateTask from "./pages/tasks/CreateTask";
+import EditTask from "./pages/tasks/EditTask";
 
 // Teams
 import Teams from "./pages/teams/Teams";
@@ -79,6 +80,7 @@ function App() {
                 {/* Tasks */}
                 <Route path={ROUTES.TASKS} element={<Tasks />} />
                 <Route path={ROUTES.CREATE_TASK} element={<CreateTask />} />
+                <Route path="/tasks/:id/edit" element={<EditTask />} />
                 <Route path="/tasks/:id" element={<TaskDetails />} />
 
                 {/* Teams */}

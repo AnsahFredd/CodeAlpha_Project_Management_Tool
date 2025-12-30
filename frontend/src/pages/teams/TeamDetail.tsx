@@ -13,7 +13,7 @@ import {
   Users as UsersIcon,
   FolderKanban,
 } from "lucide-react";
-import type { Team } from "../../interfaces";
+import type { Project, Team } from "../../interfaces";
 import {
   Stack,
   Group,
