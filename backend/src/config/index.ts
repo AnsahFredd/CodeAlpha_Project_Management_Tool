@@ -11,11 +11,11 @@ const config = {
   jwtSecret: process.env.JWT_SECRET || "fallback_secret_for_development_only",
   frontendUrl: process.env.FRONTEND_URL || "http://localhost:3000",
 
-  //   cloudinary: {
-  //     cloudName: process.env.CLOUDINARY_CLOUD_NAME,
-  //     apiKey: process.env.CLOUDINARY_API_KEY,
-  //     apiSecret: process.env.CLOUDINARY_API_SECRET,
-  //   },
+  cloudinary: {
+    cloudName: process.env.CLOUDINARY_CLOUD_NAME,
+    apiKey: process.env.CLOUDINARY_API_KEY,
+    apiSecret: process.env.CLOUDINARY_API_SECRET,
+  },
 
   email: {
     service: process.env.EMAIL_SERVICE || "gmail",
