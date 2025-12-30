@@ -45,7 +45,7 @@ import ProtectedRoute from "./components/auth/ProtectedRoute";
 function App() {
   return (
     <MantineProvider theme={theme}>
-      <Notifications />
+      <Notifications position="top-right" />
       <ModalsProvider>
         <AuthProvider>
           <BrowserRouter>

@@ -249,13 +249,17 @@ export const inviteTeamMember = async (
       });
       await team.save();
 
-      // Ideally send notification email here
-      await emailService.sendTeamInvitationEmail(
-        email,
-        team.name,
-        `${config.frontendUrl}/teams/${team._id}`, // Direct link to team
-        req.user.name
-      );
+      // Send notification email (fire-and-forget)
+      emailService
+        .sendTeamInvitationEmail(
+          email,
+          team.name,
+          `${config.frontendUrl}/teams/${team._id}`, // Direct link to team
+          req.user.name
+        )
+        .catch((err: Error) =>
+          console.error("Failed to send direct notification email:", err)
+        );
 
       return res.json({
         success: true,
@@ -275,15 +279,14 @@ export const inviteTeamMember = async (
       expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
     });
 
-    // Send email
+    // Send email (fire-and-forget)
     const joinUrl = `${config.frontendUrl}/register?token=${token}`; // Assuming register page handles token
 
-    await emailService.sendTeamInvitationEmail(
-      email,
-      team.name,
-      joinUrl,
-      req.user.name
-    );
+    emailService
+      .sendTeamInvitationEmail(email, team.name, joinUrl, req.user.name)
+      .catch((err: Error) =>
+        console.error("Failed to send invitation email:", err)
+      );
 
     res.json({ success: true, data: invitation });
   } catch (error) {

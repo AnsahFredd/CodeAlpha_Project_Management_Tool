@@ -38,6 +38,9 @@ class EmailService {
         this.transporter = nodemailer.createTransport({
           service,
           auth: { user, pass },
+          connectionTimeout: 15000, // 15 seconds
+          greetingTimeout: 15000,
+          socketTimeout: 30000,
         });
         console.log(`Email transporter initialized using service: ${service}`);
       } else if (host) {
@@ -47,11 +50,14 @@ class EmailService {
           port,
           secure: encryption,
           auth: { user, pass },
-          connectionTimeout: 10000,
-          greetingTimeout: 10000,
+          connectionTimeout: 20000, // 20 seconds
+          greetingTimeout: 20000,
+          socketTimeout: 60000,
         });
         console.log(
-          `Email transporter initialized using SMTP host: ${host}:${port}`
+          `Email transporter initialized using SMTP host: ${host}:${port}${
+            encryption ? " (Secure)" : ""
+          }`
         );
       } else {
         console.warn(
