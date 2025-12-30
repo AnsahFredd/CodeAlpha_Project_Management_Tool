@@ -1,7 +1,5 @@
 import nodemailer from "nodemailer";
-import dotenv from "dotenv";
-
-dotenv.config();
+import config from "../config";
 
 interface EmailOptions {
   to: string;
@@ -12,7 +10,7 @@ interface EmailOptions {
 
 /**
  * Service for sending emails
- * Note: Requires nodemailer to be installed and email configuration in .env
+ * Uses configuration from src/config/index.ts
  */
 class EmailService {
   private transporter: nodemailer.Transporter | null = null;
@@ -25,32 +23,49 @@ class EmailService {
    * Initialize email transporter
    */
   private initializeTransporter() {
-    // Check if email configuration exists
-    const mailUsername = process.env.MAIL_USERNAME || process.env.MAIL_USER;
-    const mailPassword = process.env.MAIL_PASSWORD;
+    const { service, user, pass } = config.email;
 
-    if (!process.env.MAIL_HOST || !mailUsername || !mailPassword) {
+    if (!user || !pass) {
       console.warn(
-        "Email configuration not found or incomplete. Email functionality will be disabled."
+        "Email configuration incomplete (missing user or pass). Email functionality will be disabled."
       );
-      if (!process.env.MAIL_HOST) console.warn("Missing MAIL_HOST");
-      if (!mailUsername) console.warn("Missing MAIL_USERNAME or MAIL_USER");
-      if (!mailPassword) console.warn("Missing MAIL_PASSWORD");
       return;
     }
 
     try {
-      this.transporter = nodemailer.createTransport({
-        host: process.env.MAIL_HOST,
-        port: parseInt(process.env.MAIL_PORT || "587"),
-        secure: process.env.MAIL_ENCRYPTION === "true", // true for 465, false for other ports
-        auth: {
-          user: mailUsername,
-          pass: mailPassword,
-        },
-      });
+      // If service is provided (e.g., 'gmail'), nodemailer handles host/port/secure
+      if (service) {
+        this.transporter = nodemailer.createTransport({
+          service,
+          auth: {
+            user,
+            pass,
+          },
+        });
+      } else {
+        // Fallback to manual host/port configuration if needed
+        const mailHost = process.env.MAIL_HOST;
+        if (!mailHost) {
+          console.warn("MAIL_HOST missing for manual SMTP configuration.");
+          return;
+        }
 
-      console.log("Email transporter initialized successfully");
+        this.transporter = nodemailer.createTransport({
+          host: mailHost,
+          port: parseInt(process.env.MAIL_PORT || "587"),
+          secure: process.env.MAIL_ENCRYPTION === "true",
+          auth: {
+            user,
+            pass,
+          },
+          connectionTimeout: 10000, // 10 seconds
+          greetingTimeout: 10000,
+        });
+      }
+
+      console.log(
+        `Email transporter initialized successfully (${service || "SMTP"})`
+      );
     } catch (error) {
       console.error("Failed to initialize email transporter:", error);
     }
@@ -66,10 +81,9 @@ class EmailService {
     }
 
     try {
-      const mailUsername = process.env.MAIL_USERNAME || process.env.MAIL_USER;
       const mailOptions = {
         from: `"${process.env.EMAIL_FROM_NAME || "Project Management Tool"}" <${
-          process.env.EMAIL_FROM || mailUsername
+          config.email.from || config.email.user
         }>`,
         to: options.to,
         subject: options.subject,

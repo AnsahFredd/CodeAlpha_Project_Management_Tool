@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import Team from "../models/Team";
+import config from "../config";
 
 // @desc    Get all teams for current user
 // @route   GET /api/teams
@@ -241,7 +242,7 @@ export const inviteTeamMember = async (
       await emailService.sendTeamInvitationEmail(
         email,
         team.name,
-        `${process.env.FRONTEND_URL}/teams/${team._id}`, // Direct link to team
+        `${config.frontendUrl}/teams/${team._id}`, // Direct link to team
         req.user.name
       );
 
@@ -264,7 +265,7 @@ export const inviteTeamMember = async (
     });
 
     // Send email
-    const joinUrl = `${process.env.FRONTEND_URL}/register?token=${token}`; // Assuming register page handles token
+    const joinUrl = `${config.frontendUrl}/register?token=${token}`; // Assuming register page handles token
 
     await emailService.sendTeamInvitationEmail(
       email,
