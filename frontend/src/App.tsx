@@ -5,6 +5,7 @@ import { ModalsProvider } from "@mantine/modals";
 import { theme } from "./theme";
 import { AuthProvider } from "./context/AuthProvider";
 import { ROUTES } from "./config/routes";
+import ErrorBoundary from "./components/common/ErrorBoundary";
 
 // Auth Pages
 import Login from "./pages/auth/Login";
@@ -81,7 +82,14 @@ function App() {
                 {/* Teams */}
                 <Route path={ROUTES.TEAMS} element={<Teams />} />
                 <Route path={ROUTES.CREATE_TEAM} element={<CreateTeam />} />
-                <Route path="/teams/:id" element={<TeamDetail />} />
+                <Route
+                  path="/teams/:id"
+                  element={
+                    <ErrorBoundary>
+                      <TeamDetail />
+                    </ErrorBoundary>
+                  }
+                />
 
                 {/* Profile */}
                 <Route path={ROUTES.PROFILE} element={<Profile />} />

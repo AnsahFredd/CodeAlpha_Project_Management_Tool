@@ -9,7 +9,11 @@ const connectDB = async () => {
       process.env.MONGODB_URI ||
         "mongodb://localhost:27017/project-management-tool"
     );
-    console.log(`MongoDB Connected: ${conn.connection.host}`);
+    if (process.env.NODE_ENV === "development") {
+      console.log(`MongoDB Connected: ${conn.connection.host}`);
+    } else {
+      console.log("MongoDB Connected successfully");
+    }
   } catch (error: any) {
     console.error(`Error: ${error.message}`);
     process.exit(1);

@@ -22,6 +22,7 @@
     "@mantine/notifications": "^8.3.10",
     "@mantine/nprogress": "^8.3.10",
     "@mantine/spotlight": "^8.3.10",
+    "@phosphor-icons/react": "^2.1.10",
     "@tabler/icons-react": "^3.36.0",
     "@tailwindcss/vite": "^4.1.17",
     "axios": "^1.13.2",

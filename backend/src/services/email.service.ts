@@ -26,7 +26,7 @@ class EmailService {
    */
   private initializeTransporter() {
     // Check if email configuration exists
-    if (!process.env.EMAIL_HOST || !process.env.EMAIL_USER) {
+    if (!process.env.MAIL_HOST || !process.env.MAIL_USERNAME) {
       console.warn(
         "Email configuration not found. Email functionality will be disabled."
       );
@@ -35,12 +35,12 @@ class EmailService {
 
     try {
       this.transporter = nodemailer.createTransport({
-        host: process.env.EMAIL_HOST,
-        port: parseInt(process.env.EMAIL_PORT || "587"),
-        secure: process.env.EMAIL_SECURE === "true", // true for 465, false for other ports
+        host: process.env.MAIL_HOST,
+        port: parseInt(process.env.MAIL_PORT || "587"),
+        secure: process.env.MAIL_ENCRYPTION === "true", // true for 465, false for other ports
         auth: {
-          user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASSWORD,
+          user: process.env.MAIL_USERNAME,
+          pass: process.env.MAIL_PASSWORD,
         },
       });
 
@@ -62,7 +62,7 @@ class EmailService {
     try {
       const mailOptions = {
         from: `"${process.env.EMAIL_FROM_NAME || "Project Management Tool"}" <${
-          process.env.EMAIL_FROM || process.env.EMAIL_USER
+          process.env.EMAIL_FROM || process.env.MAIL_USERNAME
         }>`,
         to: options.to,
         subject: options.subject,
@@ -142,6 +142,32 @@ class EmailService {
       <p>Best regards,<br>The Project Management Team</p>
     `;
     const text = `Hi ${userName}, ${inviterName} has invited you to join the project: ${projectName}. Please log in to view the project.`;
+
+    return this.sendEmail({ to: email, subject, html, text });
+  }
+
+  /**
+   * Send team invitation email
+   */
+  async sendTeamInvitationEmail(
+    email: string,
+    teamName: string,
+    matchLink: string,
+    inviterName: string
+  ): Promise<boolean> {
+    const subject = `Invitation to join team: ${teamName}`;
+    const html = `
+      <h2>Team Invitation</h2>
+      <p>Hi,</p>
+      <p>${inviterName} has invited you to join the team:</p>
+      <p><strong>${teamName}</strong></p>
+      <p>Click the link below to accept the invitation:</p>
+      <a href="${matchLink}">Join Team</a>
+      <p>This link will expire in 7 days.</p>
+      <br>
+      <p>Best regards,<br>The Project Management Team</p>
+    `;
+    const text = `Hi, ${inviterName} has invited you to join the team: ${teamName}. Use this link to join: ${matchLink}`;
 
     return this.sendEmail({ to: email, subject, html, text });
   }

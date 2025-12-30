@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useState, useCallback, type ReactNode } from "react";
 import { projectService } from "../api";
 import type { Project } from "../interfaces";
 import { ProjectContext, type ProjectContextType } from "../hooks/useProjects";
@@ -8,7 +8,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const refreshProjects = async () => {
+  const refreshProjects = useCallback(async () => {
     setLoading(true);
     try {
       const data = await projectService.getAllProjects();
@@ -18,7 +18,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const value: ProjectContextType = {
     projects,

@@ -21,7 +21,7 @@ import {
 } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 import Card from "../../components/common/Card";
-import type { Project } from "../../interfaces";
+import type { Project, TaskForm } from "../../interfaces";
 
 export default function CreateTask() {
   const navigate = useNavigate();
@@ -55,10 +55,18 @@ export default function CreateTask() {
     setError(null);
     setIsLoading(true);
     try {
-      await taskService.createTask({
+      const taskData: TaskForm = {
         ...values,
-        dueDate: values.dueDate?.toISOString(),
-      } as Parameters<typeof taskService.createTask>[0]);
+        status: values.status as TaskForm["status"],
+        priority: values.priority as TaskForm["priority"],
+        dueDate: values.dueDate
+          ? new Date(values.dueDate).toISOString()
+          : undefined,
+        assignedTo:
+          values.assignedTo.length > 0 ? values.assignedTo : undefined,
+      };
+
+      await taskService.createTask(taskData);
       navigate(ROUTES.TASKS);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Failed to create task");

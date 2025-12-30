@@ -144,9 +144,7 @@ code {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
-/* =========================================
-   Custom Utility Classes (Glass & Scrollbar)
-   ========================================= */
+
 
 /* Glass Effect */
 .glass-panel {
@@ -181,9 +179,7 @@ code {
   color: white;
 }
 
-/* =========================================
-   Animations
-   ========================================= */
+
 @keyframes fadeIn {
   from {
     opacity: 0;

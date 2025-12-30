@@ -42,22 +42,47 @@ export const teamService = {
   },
 
   /**
-   * Add member to team
+   * Add member to team (Directly)
    */
-  async addMember(teamId: string, userId: string): Promise<Team> {
+  async addMember(
+    teamId: string,
+    data: { email: string; role?: string }
+  ): Promise<Team> {
     const response = await api.post<ApiResponse<Team>>(
       `/teams/${teamId}/members`,
-      { userId }
+      data
     );
     return response.data.data!;
   },
 
   /**
+   * Invite member to team (Email)
+   */
+  async inviteMember(
+    teamId: string,
+    data: { email: string; role?: string }
+  ): Promise<void> {
+    await api.post<ApiResponse>(`/teams/${teamId}/invite`, data);
+  },
+
+  /**
    * Remove member from team
    */
-  async removeMember(teamId: string, userId: string): Promise<Team> {
-    const response = await api.delete<ApiResponse<Team>>(
-      `/teams/${teamId}/members/${userId}`
+  async removeMember(teamId: string, userId: string): Promise<void> {
+    await api.delete<ApiResponse>(`/teams/${teamId}/members/${userId}`);
+  },
+
+  /**
+   * Update member role
+   */
+  async updateMemberRole(
+    teamId: string,
+    userId: string,
+    role: string
+  ): Promise<Team> {
+    const response = await api.patch<ApiResponse<Team>>(
+      `/teams/${teamId}/members/${userId}`,
+      { role }
     );
     return response.data.data!;
   },

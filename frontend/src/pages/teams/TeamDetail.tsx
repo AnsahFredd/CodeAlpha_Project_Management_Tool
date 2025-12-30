@@ -24,14 +24,41 @@ import {
   ThemeIcon,
   SimpleGrid,
 } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
 import Card from "../../components/common/Card";
+import AddMemberModal from "../../components/team/AddMemberModal";
+import InviteMemberModal from "../../components/team/InviteMemberModal";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function TeamDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { user: currentUser, loading: authLoading } = useAuth();
+
   const [team, setTeam] = useState<Team | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Operation loading states
+  const [processingMemberId, setProcessingMemberId] = useState<string | null>(
+    null
+  );
+
+  // Modals state
+  const [addMemberOpen, setAddMemberOpen] = useState(false);
+  const [inviteMemberOpen, setInviteMemberOpen] = useState(false);
+
+  // Auth Guard
+  useEffect(() => {
+    if (!authLoading && !currentUser) {
+      navigate(ROUTES.LOGIN);
+    }
+  }, [currentUser, authLoading, navigate]);
+
+  // Re-fetch function
+  const refreshTeam = () => {
+    if (id) fetchTeam();
+  };
 
   useEffect(() => {
     if (id) {
@@ -63,17 +90,82 @@ export default function TeamDetail() {
 
     try {
       await teamService.deleteTeam(id);
+      notifications.show({
+        title: "Success",
+        message: "Team deleted successfully",
+        color: "green",
+      });
       navigate(ROUTES.TEAMS);
     } catch (err: unknown) {
       const errorMessage =
         err instanceof Error
           ? err.message
           : (err as { message?: string })?.message || "Failed to delete team";
-      setError(errorMessage);
+      notifications.show({
+        title: "Error",
+        message: errorMessage,
+        color: "red",
+      });
     }
   };
 
-  if (loading) {
+  const handleRemoveMember = async (userId: string) => {
+    if (!id || !confirm("Remove this member?")) return;
+
+    setProcessingMemberId(userId);
+    try {
+      await teamService.removeMember(id, userId);
+      notifications.show({
+        title: "Success",
+        message: "Member removed successfully",
+        color: "green",
+      });
+      refreshTeam();
+    } catch (err: unknown) {
+      const errorMessage =
+        (err as { response?: { data?: { message?: string } } })?.response?.data
+          ?.message ||
+        (err as Error).message ||
+        "Failed to remove member";
+      notifications.show({
+        title: "Error",
+        message: errorMessage,
+        color: "red",
+      });
+    } finally {
+      setProcessingMemberId(null);
+    }
+  };
+
+  const handleRoleChange = async (userId: string, role: string) => {
+    if (!id) return;
+
+    setProcessingMemberId(userId);
+    try {
+      await teamService.updateMemberRole(id, userId, role);
+      notifications.show({
+        title: "Success",
+        message: "Role updated successfully",
+        color: "green",
+      });
+      refreshTeam();
+    } catch (err: unknown) {
+      const errorMessage =
+        (err as { response?: { data?: { message?: string } } })?.response?.data
+          ?.message ||
+        (err as Error).message ||
+        "Failed to update role";
+      notifications.show({
+        title: "Error",
+        message: errorMessage,
+        color: "red",
+      });
+    } finally {
+      setProcessingMemberId(null);
+    }
+  };
+
+  if (loading || authLoading) {
     return <Loading fullScreen text="Loading team..." />;
   }
 
@@ -96,8 +188,27 @@ export default function TeamDetail() {
   const membersCount = Array.isArray(team.members) ? team.members.length : 0;
   const projectsCount = Array.isArray(team.projects) ? team.projects.length : 0;
 
+  // Use optional chaining for safety
+  const isOwner =
+    team?.owner?._id && currentUser?._id
+      ? team.owner._id === currentUser._id
+      : false;
+
   return (
     <Stack gap="lg">
+      <AddMemberModal
+        opened={addMemberOpen}
+        onClose={() => setAddMemberOpen(false)}
+        teamId={team._id}
+        onSuccess={refreshTeam}
+      />
+      <InviteMemberModal
+        opened={inviteMemberOpen}
+        onClose={() => setInviteMemberOpen(false)}
+        teamId={team._id}
+        onSuccess={refreshTeam}
+      />
+
       {/* Header */}
       <Group justify="space-between" align="flex-start">
         <Group align="flex-start">
@@ -114,14 +225,18 @@ export default function TeamDetail() {
           </div>
         </Group>
         <Group>
-          <Button variant="outline" size="sm">
-            <Edit size={14} style={{ marginRight: 6 }} />
-            Edit
-          </Button>
-          <Button variant="danger" size="sm" onClick={handleDelete}>
-            <Trash2 size={14} style={{ marginRight: 6 }} />
-            Delete
-          </Button>
+          {isOwner && (
+            <>
+              <Button variant="outline" size="sm">
+                <Edit size={14} style={{ marginRight: 6 }} />
+                Edit
+              </Button>
+              <Button variant="danger" size="sm" onClick={handleDelete}>
+                <Trash2 size={14} style={{ marginRight: 6 }} />
+                Delete
+              </Button>
+            </>
+          )}
         </Group>
       </Group>
 
@@ -163,12 +278,25 @@ export default function TeamDetail() {
             <Card
               title="Team Members"
               action={
-                <Button size="xs" variant="ghost">
-                  Add Member
-                </Button>
+                isOwner && (
+                  <Button
+                    size="xs"
+                    variant="ghost"
+                    onClick={() => setAddMemberOpen(true)}
+                  >
+                    Add Member
+                  </Button>
+                )
               }
             >
-              <MemberList members={team.members} />
+              <MemberList
+                members={team.members}
+                currentUserId={currentUser?._id}
+                isOwner={isOwner}
+                onRemove={handleRemoveMember}
+                onRoleChange={handleRoleChange}
+                processingMemberId={processingMemberId}
+              />
             </Card>
 
             {/* Projects Section */}
@@ -214,7 +342,11 @@ export default function TeamDetail() {
           <Stack gap="lg">
             <Card title="Quick Actions">
               <Stack gap="sm">
-                <Button variant="outline" fullWidth>
+                <Button
+                  variant="outline"
+                  fullWidth
+                  onClick={() => setInviteMemberOpen(true)}
+                >
                   Invite Members
                 </Button>
                 <Button variant="outline" fullWidth>

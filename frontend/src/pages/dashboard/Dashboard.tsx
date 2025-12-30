@@ -151,7 +151,7 @@ export default function Dashboard() {
             </Group>
 
             <Stack gap="lg">
-              {stats.recentActivity.length === 0 ? (
+              {(stats.recentActivity?.length || 0) === 0 ? (
                 <Text ta="center" py="xl" c="dimmed">
                   No recent activity
                 </Text>

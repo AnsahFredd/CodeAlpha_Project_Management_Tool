@@ -87,7 +87,11 @@ export interface Team {
   description?: string;
   owner: User;
   createdBy: User | string;
-  members: User[];
+  members: {
+    user: User;
+    role: "admin" | "member" | "viewer";
+    joinedAt: string;
+  }[];
   projects: Project[];
   createdAt: string;
   updatedAt: string;

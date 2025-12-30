@@ -19,7 +19,7 @@ export const protect = async (
 
       const decoded = jwt.verify(
         token,
-        process.env.JWT_SECRET || "fallback_secret"
+        process.env.JWT_ACCESS_SECRET || "fallback_access_secret"
       ) as DecodedToken;
 
       req.user = await User.findById(decoded.id).select("-password");

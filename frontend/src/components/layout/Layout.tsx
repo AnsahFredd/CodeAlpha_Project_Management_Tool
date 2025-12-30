@@ -14,7 +14,6 @@ import { useDisclosure } from "@mantine/hooks";
 import { Outlet } from "react-router-dom";
 import Sidebar from "../common/Sidebar";
 import { ProjectProvider } from "../../context/ProjectContext";
-// import { ThemeProvider } from '../../context/ThemeContext'; // Mantine handles theme
 import { Moon, Sun } from "lucide-react";
 
 export default function Layout() {

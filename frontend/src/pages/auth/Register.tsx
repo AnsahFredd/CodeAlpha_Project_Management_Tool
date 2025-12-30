@@ -133,6 +133,7 @@ export default function Register() {
                 type="submit"
                 fullWidth
                 size="lg"
+                variant="outline"
                 isLoading={isLoading}
                 rightSection={<ArrowRight size={18} />}
                 mt="lg"

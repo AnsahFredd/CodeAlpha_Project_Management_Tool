@@ -104,6 +104,7 @@ export default function ForgotPassword() {
                   fullWidth
                   size="lg"
                   isLoading={isLoading}
+                  variant="ghost"
                   mt="md"
                 >
                   Send Reset Link
