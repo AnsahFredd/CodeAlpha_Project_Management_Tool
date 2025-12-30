@@ -160,36 +160,28 @@ export default function Dashboard() {
                   No recent activity
                 </Text>
               ) : (
-                stats.recentActivity.map(
-                  (
-                    activity: any // Should be Activity but let's check interfaces if I can use it
-                  ) => (
-                    <Group
-                      key={(activity as any)._id}
-                      align="flex-start"
-                      wrap="nowrap"
+                stats.recentActivity.map((activity: Activity) => (
+                  <Group key={activity._id} align="flex-start" wrap="nowrap">
+                    <ThemeIcon
+                      color="blue"
+                      variant="light"
+                      radius="xl"
+                      size="md"
                     >
-                      <ThemeIcon
-                        color="blue"
-                        variant="light"
-                        radius="xl"
-                        size="md"
-                      >
-                        <Calendar size={14} />
-                      </ThemeIcon>
-                      <Stack gap={2}>
-                        <Text size="sm" fw={600}>
-                          {activity.user?.name || "Someone"}{" "}
-                          {activity.description}
-                        </Text>
-                        <Text size="xs" c="dimmed">
-                          {new Date(activity.createdAt).toLocaleDateString()} at{" "}
-                          {new Date(activity.createdAt).toLocaleTimeString()}
-                        </Text>
-                      </Stack>
-                    </Group>
-                  )
-                )
+                      <Calendar size={14} />
+                    </ThemeIcon>
+                    <Stack gap={2}>
+                      <Text size="sm" fw={600}>
+                        {activity.user?.name || "Someone"}{" "}
+                        {activity.description}
+                      </Text>
+                      <Text size="xs" c="dimmed">
+                        {new Date(activity.createdAt).toLocaleDateString()} at{" "}
+                        {new Date(activity.createdAt).toLocaleTimeString()}
+                      </Text>
+                    </Stack>
+                  </Group>
+                ))
               )}
             </Stack>
           </Paper>

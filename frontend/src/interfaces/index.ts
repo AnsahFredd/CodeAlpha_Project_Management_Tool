@@ -28,7 +28,7 @@ export interface DashboardStats {
   totalTeams: number;
   pendingTasks: number;
   completedTasks: number;
-  recentActivity: unknown[];
+  recentActivity: Activity[];
 }
 
 export interface LoginForm {
