@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Users, FolderKanban } from "lucide-react";
 import Card from "../common/Card";
 import { ROUTES } from "../../config/routes";
-import type { Team, User } from "../../interfaces";
+import type { Team } from "../../interfaces";
 
 interface TeamCardProps {
   team: Team;
@@ -43,22 +43,20 @@ export default function TeamCard({ team }: TeamCardProps) {
           <div className="flex items-center pt-4 border-t border-border-color">
             <div className="flex -space-x-2">
               {Array.isArray(team.members) &&
-                team.members
-                  .slice(0, 5)
-                  .map((member: string | User, index: number) => {
-                    const user = typeof member === "object" ? member : null;
-                    return (
-                      <div
-                        key={index}
-                        className="h-8 w-8 rounded-full bg-primary-light border-2 border-bg-primary flex items-center justify-center"
-                        title={user?.name || "Unknown User"}
-                      >
-                        <span className="text-primary text-xs font-medium">
-                          {user?.name?.charAt(0).toUpperCase() || "U"}
-                        </span>
-                      </div>
-                    );
-                  })}
+                team.members.slice(0, 5).map((member, index: number) => {
+                  const user = member.user;
+                  return (
+                    <div
+                      key={index}
+                      className="h-8 w-8 rounded-full bg-primary-light border-2 border-bg-primary flex items-center justify-center"
+                      title={user?.name || "Unknown User"}
+                    >
+                      <span className="text-primary text-xs font-medium">
+                        {user?.name?.charAt(0).toUpperCase() || "U"}
+                      </span>
+                    </div>
+                  );
+                })}
               {membersCount > 5 && (
                 <div className="h-8 w-8 rounded-full bg-bg-tertiary border-2 border-bg-primary flex items-center justify-center">
                   <span className="text-secondary text-xs font-medium">

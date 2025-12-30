@@ -26,10 +26,16 @@ class EmailService {
    */
   private initializeTransporter() {
     // Check if email configuration exists
-    if (!process.env.MAIL_HOST || !process.env.MAIL_USERNAME) {
+    const mailUsername = process.env.MAIL_USERNAME || process.env.MAIL_USER;
+    const mailPassword = process.env.MAIL_PASSWORD;
+
+    if (!process.env.MAIL_HOST || !mailUsername || !mailPassword) {
       console.warn(
-        "Email configuration not found. Email functionality will be disabled."
+        "Email configuration not found or incomplete. Email functionality will be disabled."
       );
+      if (!process.env.MAIL_HOST) console.warn("Missing MAIL_HOST");
+      if (!mailUsername) console.warn("Missing MAIL_USERNAME or MAIL_USER");
+      if (!mailPassword) console.warn("Missing MAIL_PASSWORD");
       return;
     }
 
@@ -39,8 +45,8 @@ class EmailService {
         port: parseInt(process.env.MAIL_PORT || "587"),
         secure: process.env.MAIL_ENCRYPTION === "true", // true for 465, false for other ports
         auth: {
-          user: process.env.MAIL_USERNAME,
-          pass: process.env.MAIL_PASSWORD,
+          user: mailUsername,
+          pass: mailPassword,
         },
       });
 
@@ -60,9 +66,10 @@ class EmailService {
     }
 
     try {
+      const mailUsername = process.env.MAIL_USERNAME || process.env.MAIL_USER;
       const mailOptions = {
         from: `"${process.env.EMAIL_FROM_NAME || "Project Management Tool"}" <${
-          process.env.EMAIL_FROM || process.env.MAIL_USERNAME
+          process.env.EMAIL_FROM || mailUsername
         }>`,
         to: options.to,
         subject: options.subject,

@@ -1,15 +1,10 @@
 import mongoose from "mongoose";
-import dotenv from "dotenv";
-
-dotenv.config();
+import config from "./index";
 
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(
-      process.env.MONGODB_URI ||
-        "mongodb://localhost:27017/project-management-tool"
-    );
-    if (process.env.NODE_ENV === "development") {
+    const conn = await mongoose.connect(config.mongodbUri);
+    if (config.env === "development") {
       console.log(`MongoDB Connected: ${conn.connection.host}`);
     } else {
       console.log("MongoDB Connected successfully");

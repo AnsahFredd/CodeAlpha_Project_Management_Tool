@@ -1,21 +1,30 @@
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
+import helmet from "helmet";
+import morgan from "morgan";
+import config from "./config";
 import authRoutes from "./routes/auth.routes";
 import projectRoutes from "./routes/project.routes";
 import taskRoutes from "./routes/task.routes";
 import dashboardRoutes from "./routes/dashboard.routes";
 import teamRoutes from "./routes/team.routes";
-// Import other routes later
-
-dotenv.config();
 
 const app = express();
+
+// Security Middleware
+app.use(helmet());
+
+// Logging Middleware
+if (config.env === "development") {
+  app.use(morgan("dev"));
+} else {
+  app.use(morgan("combined"));
+}
 
 // Middleware
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    origin: config.env === "production" ? config.frontendUrl : true,
     credentials: true,
   })
 );
@@ -28,7 +37,7 @@ app.use("/api/tasks", taskRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/teams", teamRoutes);
 
-// Error Handler (Placeholder for now)
+// Error Handler
 app.use(
   (
     err: any,
@@ -40,7 +49,7 @@ app.use(
     res.status(statusCode).json({
       success: false,
       message: err.message,
-      stack: process.env.NODE_ENV === "production" ? null : err.stack,
+      stack: config.env === "production" ? null : err.stack,
     });
   }
 );
