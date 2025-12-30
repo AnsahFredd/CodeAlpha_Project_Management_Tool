@@ -19,10 +19,16 @@ const config = {
   },
 
   email: {
-    service: process.env.EMAIL_SERVICE || "gmail",
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
+    service: process.env.EMAIL_SERVICE, // Removed default "gmail" to allow manual SMTP
+    host: process.env.MAIL_HOST || process.env.EMAIL_HOST,
+    port: parseInt(
+      process.env.MAIL_PORT || process.env.EMAIL_PORT || "587",
+      10
+    ),
+    user: process.env.MAIL_USER || process.env.EMAIL_USER,
+    pass: process.env.MAIL_PASSWORD || process.env.EMAIL_PASS,
     from: process.env.EMAIL_FROM || "noreply@yourdomain.com",
+    encryption: process.env.MAIL_ENCRYPTION === "true",
   },
 };
 

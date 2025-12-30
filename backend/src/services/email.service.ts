@@ -23,49 +23,41 @@ class EmailService {
    * Initialize email transporter
    */
   private initializeTransporter() {
-    const { service, user, pass } = config.email;
+    const { service, host, port, user, pass, encryption } = config.email;
 
     if (!user || !pass) {
       console.warn(
-        "Email configuration incomplete (missing user or pass). Email functionality will be disabled."
+        "Email configuration incomplete (missing user/MAIL_USER or pass/MAIL_PASSWORD). Email functionality will be disabled."
       );
       return;
     }
 
     try {
-      // If service is provided (e.g., 'gmail'), nodemailer handles host/port/secure
       if (service) {
+        // Service-based configuration (e.g., 'gmail')
         this.transporter = nodemailer.createTransport({
           service,
-          auth: {
-            user,
-            pass,
-          },
+          auth: { user, pass },
         });
-      } else {
-        // Fallback to manual host/port configuration if needed
-        const mailHost = process.env.MAIL_HOST;
-        if (!mailHost) {
-          console.warn("MAIL_HOST missing for manual SMTP configuration.");
-          return;
-        }
-
+        console.log(`Email transporter initialized using service: ${service}`);
+      } else if (host) {
+        // Manual SMTP configuration
         this.transporter = nodemailer.createTransport({
-          host: mailHost,
-          port: parseInt(process.env.MAIL_PORT || "587"),
-          secure: process.env.MAIL_ENCRYPTION === "true",
-          auth: {
-            user,
-            pass,
-          },
-          connectionTimeout: 10000, // 10 seconds
+          host,
+          port,
+          secure: encryption,
+          auth: { user, pass },
+          connectionTimeout: 10000,
           greetingTimeout: 10000,
         });
+        console.log(
+          `Email transporter initialized using SMTP host: ${host}:${port}`
+        );
+      } else {
+        console.warn(
+          "Neither EMAIL_SERVICE nor MAIL_HOST provided. Email functionality disabled."
+        );
       }
-
-      console.log(
-        `Email transporter initialized successfully (${service || "SMTP"})`
-      );
     } catch (error) {
       console.error("Failed to initialize email transporter:", error);
     }
