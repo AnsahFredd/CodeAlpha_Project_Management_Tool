@@ -18,6 +18,7 @@ export const theme = createTheme({
   primaryColor: "brand",
   colors: {
     brand,
+    primary: brand,
   },
   fontFamily: "Inter, system-ui, Avenir, Helvetica, Arial, sans-serif",
   headings: {

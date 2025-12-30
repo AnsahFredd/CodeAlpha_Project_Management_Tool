@@ -25,9 +25,11 @@ import { ROUTES } from "../../config/routes";
 import { useEffect, useState } from "react";
 import { dashboardService, projectService } from "../../api";
 import Loading from "../../components/common/Loading";
-import type { DashboardStats, Project } from "../../interfaces";
+import type { DashboardStats, Project, Activity } from "../../interfaces";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function Dashboard() {
+  const { user } = useAuth();
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
@@ -71,7 +73,9 @@ export default function Dashboard() {
       >
         <Group justify="space-between">
           <Stack gap={4}>
-            <Title order={1}>Welcome back!</Title>
+            <Title order={1}>
+              Welcome back{user?.name ? `, ${user.name}` : ""}!
+            </Title>
             <Text size="lg" opacity={0.9}>
               Here's what's happening in your projects today.
             </Text>
@@ -156,28 +160,36 @@ export default function Dashboard() {
                   No recent activity
                 </Text>
               ) : (
-                stats.recentActivity.map((activity: any) => (
-                  <Group key={activity._id} align="flex-start" wrap="nowrap">
-                    <ThemeIcon
-                      color="blue"
-                      variant="light"
-                      radius="xl"
-                      size="md"
+                stats.recentActivity.map(
+                  (
+                    activity: any // Should be Activity but let's check interfaces if I can use it
+                  ) => (
+                    <Group
+                      key={(activity as any)._id}
+                      align="flex-start"
+                      wrap="nowrap"
                     >
-                      <Calendar size={14} />
-                    </ThemeIcon>
-                    <Stack gap={2}>
-                      <Text size="sm" fw={600}>
-                        {activity.user?.name || "Someone"}{" "}
-                        {activity.description}
-                      </Text>
-                      <Text size="xs" c="dimmed">
-                        {new Date(activity.createdAt).toLocaleDateString()} at{" "}
-                        {new Date(activity.createdAt).toLocaleTimeString()}
-                      </Text>
-                    </Stack>
-                  </Group>
-                ))
+                      <ThemeIcon
+                        color="blue"
+                        variant="light"
+                        radius="xl"
+                        size="md"
+                      >
+                        <Calendar size={14} />
+                      </ThemeIcon>
+                      <Stack gap={2}>
+                        <Text size="sm" fw={600}>
+                          {activity.user?.name || "Someone"}{" "}
+                          {activity.description}
+                        </Text>
+                        <Text size="xs" c="dimmed">
+                          {new Date(activity.createdAt).toLocaleDateString()} at{" "}
+                          {new Date(activity.createdAt).toLocaleTimeString()}
+                        </Text>
+                      </Stack>
+                    </Group>
+                  )
+                )
               )}
             </Stack>
           </Paper>

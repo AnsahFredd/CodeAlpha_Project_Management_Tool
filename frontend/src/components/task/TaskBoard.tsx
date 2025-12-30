@@ -8,9 +8,14 @@ import { Group, Stack, Text, Box, Paper, SimpleGrid } from "@mantine/core";
 interface TaskBoardProps {
   tasks: Task[];
   onUpdate?: () => void;
+  onTaskMove?: (taskId: string, newStatus: Task["status"]) => void;
 }
 
-export default function TaskBoard({ tasks, onUpdate }: TaskBoardProps) {
+export default function TaskBoard({
+  tasks,
+  onUpdate,
+  onTaskMove,
+}: TaskBoardProps) {
   const [draggedTask, setDraggedTask] = useState<Task | null>(null);
 
   const columns = [
@@ -45,14 +50,18 @@ export default function TaskBoard({ tasks, onUpdate }: TaskBoardProps) {
       return;
     }
 
-    try {
-      await taskService.updateTaskStatus(draggedTask._id, newStatus);
-      onUpdate?.();
-    } catch (error) {
-      console.error("Failed to update task status:", error);
-    } finally {
-      setDraggedTask(null);
+    if (onTaskMove) {
+      onTaskMove(draggedTask._id, newStatus);
+    } else {
+      // Fallback if no specific handler
+      try {
+        await taskService.updateTaskStatus(draggedTask._id, newStatus);
+        onUpdate?.();
+      } catch (error) {
+        console.error("Failed to update task status:", error);
+      }
     }
+    setDraggedTask(null);
   };
 
   const getTasksByStatus = (status: Task["status"]) => {

@@ -37,7 +37,7 @@ export default function TaskFilters({
           onChange={(e) => onSearchChange(e.currentTarget.value)}
         />
 
-        <Group grow align="center" style={{ flex: 2 }}>
+        <Group grow align="center" style={{ flex: 3, minWidth: "600px" }}>
           {/* Status Filter */}
           <Select
             placeholder="Status"

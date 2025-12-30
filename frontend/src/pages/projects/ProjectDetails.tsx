@@ -92,7 +92,7 @@ export default function ProjectDetailsPage() {
           </div>
         </Group>
         <Group>
-          <Link to={`${ROUTES.PROJECTS}/${id}/edit`}>
+          <Link to={ROUTES.EDIT_PROJECT(id!)}>
             <Button variant="outline" size="sm">
               <Edit size={14} style={{ marginRight: 6 }} />
               Edit

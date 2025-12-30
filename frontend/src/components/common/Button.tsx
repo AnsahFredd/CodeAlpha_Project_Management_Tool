@@ -32,19 +32,19 @@ export default function Button({
   const getVariantProps = () => {
     switch (variant) {
       case "primary":
-        return { variant: "filled", color: "primary" };
+        return { variant: "filled", color: "brand" } as const;
       case "secondary":
-        return { variant: "filled", color: "gray" };
+        return { variant: "light", color: "brand" } as const;
       case "outline":
-        return { variant: "outline" };
+        return { variant: "outline", color: "brand" } as const;
       case "ghost":
-        return { variant: "subtle" }; // Mantine 'subtle' is ghost-like
+        return { variant: "subtle", color: "brand" } as const;
       case "danger":
-        return { variant: "filled", color: "red" };
+        return { variant: "filled", color: "red" } as const;
       case "white":
-        return { variant: "white" };
+        return { variant: "white", color: "brand" } as const;
       default:
-        return { variant: "filled" };
+        return { variant: "filled", color: "brand" } as const;
     }
   };
 

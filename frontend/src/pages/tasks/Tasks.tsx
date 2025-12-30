@@ -16,6 +16,7 @@ import {
   Paper,
   Box,
 } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
 import Button from "../../components/common/Button";
 import Loading from "../../components/common/Loading";
 import type { Task } from "../../interfaces";
@@ -45,6 +46,30 @@ export default function Tasks() {
       console.error("Failed to fetch tasks:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleTaskStatusChange = async (
+    taskId: string,
+    newStatus: Task["status"]
+  ) => {
+    const previousTasks = [...tasks];
+
+    // Optimistic update
+    setTasks((prev) =>
+      prev.map((t) => (t._id === taskId ? { ...t, status: newStatus } : t))
+    );
+
+    try {
+      await taskService.updateTaskStatus(taskId, newStatus);
+    } catch (error) {
+      console.error("Failed to update task status:", error);
+      setTasks(previousTasks); // Rollback
+      notifications.show({
+        title: "Error",
+        message: "Failed to update task status. Please try again.",
+        color: "red",
+      });
     }
   };
 
@@ -133,7 +158,11 @@ export default function Tasks() {
             </Text>
           </Box>
         ) : viewMode === "board" ? (
-          <TaskBoard tasks={filteredTasks} />
+          <TaskBoard
+            tasks={filteredTasks}
+            onUpdate={fetchTasks}
+            onTaskMove={handleTaskStatusChange}
+          />
         ) : (
           <TaskList tasks={filteredTasks} />
         )}

@@ -70,7 +70,7 @@ export default function Card({
           withBorder
           inheritPadding
           py="sm"
-          bg="gray.0"
+          bg="var(--bg-tertiary)"
           c="dimmed"
           style={{ fontSize: theme.fontSizes.sm }}
         >

@@ -19,6 +19,7 @@ const TeamSchema: Schema = new Schema(
     name: { type: String, required: true },
     description: { type: String },
     owner: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    createdBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
     members: [
       {
         user: { type: Schema.Types.ObjectId, ref: "User" },

@@ -1,34 +1,35 @@
 // Route constants for the application
 export const ROUTES = {
   // Auth routes
-  LOGIN: '/login',
-  REGISTER: '/register',
-  FORGOT_PASSWORD: '/forgot-password',
-  
+  LOGIN: "/login",
+  REGISTER: "/register",
+  FORGOT_PASSWORD: "/forgot-password",
+
   // Dashboard
-  DASHBOARD: '/dashboard',
-  
+  DASHBOARD: "/dashboard",
+
   // Projects
-  PROJECTS: '/projects',
+  PROJECTS: "/projects",
   PROJECT_DETAIL: (id: string) => `/projects/${id}`,
-  CREATE_PROJECT: '/projects/create',
-  
+  EDIT_PROJECT: (id: string) => `/projects/${id}/edit`,
+  CREATE_PROJECT: "/projects/create",
+
   // Tasks
-  TASKS: '/tasks',
+  TASKS: "/tasks",
   TASK_DETAIL: (id: string) => `/tasks/${id}`,
-  CREATE_TASK: '/tasks/create',
-  
+  CREATE_TASK: "/tasks/create",
+
   // Teams
-  TEAMS: '/teams',
+  TEAMS: "/teams",
   TEAM_DETAIL: (id: string) => `/teams/${id}`,
-  CREATE_TEAM: '/teams/create',
-  
+  CREATE_TEAM: "/teams/create",
+
   // Profile
-  PROFILE: '/profile',
-  
+  PROFILE: "/profile",
+
   // Root
-  ROOT: '/',
-} as const
+  ROOT: "/",
+} as const;
 
 // Public routes (accessible without authentication)
 export const PUBLIC_ROUTES = [
@@ -36,7 +37,7 @@ export const PUBLIC_ROUTES = [
   ROUTES.REGISTER,
   ROUTES.FORGOT_PASSWORD,
   ROUTES.ROOT,
-] as const
+] as const;
 
 // Protected routes (require authentication)
 export const PROTECTED_ROUTES = [
@@ -45,5 +46,4 @@ export const PROTECTED_ROUTES = [
   ROUTES.TASKS,
   ROUTES.TEAMS,
   ROUTES.PROFILE,
-] as const
-
+] as const;

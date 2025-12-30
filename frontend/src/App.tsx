@@ -17,8 +17,9 @@ import Dashboard from "./pages/dashboard/Dashboard";
 
 // Projects
 import Projects from "./pages/projects/Projects";
-import ProjectDetails from "./pages/projects/ProjectDetails";
+import ProjectDetailsPage from "./pages/projects/ProjectDetails";
 import CreateProject from "./pages/projects/CreateProject";
+import EditProject from "./pages/projects/EditProject";
 
 // Tasks
 import Tasks from "./pages/tasks/Tasks";
@@ -72,7 +73,8 @@ function App() {
                   path={ROUTES.CREATE_PROJECT}
                   element={<CreateProject />}
                 />
-                <Route path="/projects/:id" element={<ProjectDetails />} />
+                <Route path="/projects/:id/edit" element={<EditProject />} />
+                <Route path="/projects/:id" element={<ProjectDetailsPage />} />
 
                 {/* Tasks */}
                 <Route path={ROUTES.TASKS} element={<Tasks />} />

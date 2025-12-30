@@ -11,6 +11,7 @@ export const getTeams = async (req: any, res: Response, next: NextFunction) => {
       $or: [{ owner: req.user.id }, { "members.user": req.user.id }], // Update query for members.user
     })
       .populate("owner", "name email")
+      .populate("createdBy", "name email")
       .populate("members.user", "name email"); // Populate nested user field
 
     res.json({ success: true, data: teams });
@@ -26,6 +27,7 @@ export const getTeam = async (req: any, res: Response, next: NextFunction) => {
   try {
     const team = await Team.findById(req.params.id)
       .populate("owner", "name email")
+      .populate("createdBy", "name email")
       .populate("members.user", "name email") // Populate nested user field
       .populate("projects", "name status");
 
@@ -51,12 +53,18 @@ export const createTeam = async (
 ) => {
   try {
     req.body.owner = req.user.id;
+    req.body.createdBy = req.user.id;
     // Initialize members with owner as admin
     if (!req.body.members) {
       req.body.members = [{ user: req.user.id, role: "admin" }];
     }
     const team = await Team.create(req.body);
-    res.status(201).json({ success: true, data: team });
+    // Populate for response
+    const teamId = (team as any)._id || (team as any)[0]._id;
+    const populatedTeam = await Team.findById(teamId)
+      .populate("owner", "name email")
+      .populate("createdBy", "name email");
+    res.status(201).json({ success: true, data: populatedTeam });
   } catch (error) {
     next(error);
   }

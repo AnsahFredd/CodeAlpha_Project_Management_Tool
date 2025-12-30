@@ -22,7 +22,17 @@ const ProjectSchema: Schema = new Schema(
     owner: { type: Schema.Types.ObjectId, ref: "User", required: true },
     members: [{ type: Schema.Types.ObjectId, ref: "User" }],
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
 );
+
+ProjectSchema.virtual("tasks", {
+  ref: "Task",
+  localField: "_id",
+  foreignField: "project",
+});
 
 export default mongoose.model<IProject>("Project", ProjectSchema);

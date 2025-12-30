@@ -194,7 +194,7 @@ export default function ProjectDetails({
                         "1px solid var(--mantine-color-default-border)",
                       textDecoration: "none",
                     }}
-                    className="group hover:bg-gray-50 dark:hover:bg-dark-6" // Using tailwind for hover bg or use mantle sx
+                    className="group hover:bg-bg-hover transition-colors"
                   >
                     <Group
                       justify="space-between"
@@ -321,7 +321,7 @@ export default function ProjectDetails({
                           gap="sm"
                           p="xs"
                           style={{ borderRadius: "8px" }}
-                          className="hover:bg-gray-50 dark:hover:bg-dark-6"
+                          className="hover:bg-bg-hover transition-colors"
                         >
                           <Avatar color="blue" radius="xl">
                             {user?.name?.charAt(0).toUpperCase() || "U"}

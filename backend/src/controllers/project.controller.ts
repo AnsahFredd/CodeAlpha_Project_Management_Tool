@@ -14,7 +14,9 @@ export const getProjects = async (
   try {
     const projects = await Project.find({
       $or: [{ owner: req.user.id }, { members: req.user.id }],
-    }).populate("owner", "name email");
+    })
+      .populate("owner", "name email")
+      .populate("tasks", "status");
     res.json({ success: true, data: projects });
   } catch (error) {
     next(error);
@@ -32,7 +34,8 @@ export const getProject = async (
   try {
     const project = await Project.findById(req.params.id)
       .populate("owner", "name email")
-      .populate("members", "name email");
+      .populate("members", "name email")
+      .populate("tasks");
 
     if (!project) {
       return res

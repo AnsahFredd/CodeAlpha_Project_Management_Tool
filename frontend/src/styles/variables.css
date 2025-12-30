@@ -149,7 +149,8 @@
 }
 
 /* Dark Mode - Professional Slate Theme */
-[data-theme="dark"] {
+[data-theme="dark"],
+[data-mantine-color-scheme="dark"] {
   --bg-primary: var(--neutral-900); /* #0f172a */
   --bg-secondary: var(--neutral-950); /* Closest to black for contrast */
   --bg-tertiary: var(--neutral-800); /* #1e293b */
