@@ -97,7 +97,9 @@ export const updateTeam = async (
     team = await Team.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
-    });
+    })
+      .populate("owner", "name email")
+      .populate("createdBy", "name email");
 
     res.json({ success: true, data: team });
   } catch (error) {
@@ -190,6 +192,7 @@ export const addTeamMember = async (
     // Re-fetch to populate
     const updatedTeam = await Team.findById(req.params.id)
       .populate("owner", "name email")
+      .populate("createdBy", "name email")
       .populate("members.user", "name email");
 
     res.json({ success: true, data: updatedTeam });
@@ -343,7 +346,12 @@ export const updateMemberRole = async (
     member.role = req.body.role;
     await team.save();
 
-    res.json({ success: true, data: team });
+    const updatedTeam = await Team.findById(req.params.id)
+      .populate("owner", "name email")
+      .populate("createdBy", "name email")
+      .populate("members.user", "name email");
+
+    res.json({ success: true, data: updatedTeam });
   } catch (error) {
     next(error);
   }

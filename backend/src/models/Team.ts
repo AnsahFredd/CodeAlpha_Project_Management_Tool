@@ -4,6 +4,7 @@ export interface ITeam extends Document {
   name: string;
   description?: string;
   owner: mongoose.Types.ObjectId;
+  createdBy: mongoose.Types.ObjectId;
   members: {
     user: mongoose.Types.ObjectId;
     role: "admin" | "member" | "viewer";
