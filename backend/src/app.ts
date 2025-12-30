@@ -37,6 +37,9 @@ app.use("/api/tasks", taskRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/teams", teamRoutes);
 
+app.get("/api/health", (_req: express.Request, res: express.Response) => {
+  res.status(200).json({ status: "OK", message: "Backend is reachable" });
+});
 // Error Handler
 app.use(
   (
