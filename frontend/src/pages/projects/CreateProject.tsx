@@ -81,7 +81,7 @@ export default function CreateProject() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
+    <div className="max-w-3xl mx-auto space-y-10 py-4">
       {/* Header */}
       <div className="flex items-center gap-4">
         <Link to={ROUTES.PROJECTS}>
@@ -113,8 +113,8 @@ export default function CreateProject() {
           </Alert>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <form onSubmit={handleSubmit} className="space-y-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-8">
             <div className="md:col-span-2">
               <Input
                 label="Project Name"
@@ -231,7 +231,7 @@ export default function CreateProject() {
             />
           </div>
 
-          <div className="flex items-center justify-end gap-4 pt-6 border-t border-border-color">
+          <div className="flex items-center justify-end gap-4 pt-10 border-t border-border-color mt-4">
             <Link to={ROUTES.PROJECTS}>
               <Button
                 type="button"

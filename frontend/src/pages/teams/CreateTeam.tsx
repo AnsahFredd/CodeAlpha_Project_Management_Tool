@@ -46,7 +46,7 @@ export default function CreateTeam() {
   };
 
   return (
-    <Stack gap="lg">
+    <Stack gap={40}>
       {/* Header */}
       <Group align="flex-start" gap="md">
         <Link to={ROUTES.TEAMS}>
@@ -74,7 +74,7 @@ export default function CreateTeam() {
         )}
 
         <form onSubmit={form.onSubmit(handleSubmit)}>
-          <Stack gap="md">
+          <Stack gap="xl">
             <TextInput
               label="Team Name"
               placeholder="Enter team name"
@@ -91,8 +91,8 @@ export default function CreateTeam() {
 
             <Group
               justify="flex-end"
-              mt="xl"
-              pt="md"
+              mt={40}
+              pt="xl"
               style={{
                 borderTop: "1px solid var(--mantine-color-default-border)",
               }}

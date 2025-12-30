@@ -90,7 +90,7 @@ export default function CreateTask() {
   };
 
   return (
-    <Stack gap="lg">
+    <Stack gap={40}>
       <Group align="flex-start">
         <Link to={ROUTES.TASKS}>
           <Button variant="ghost" size="sm" style={{ paddingLeft: 0 }}>
@@ -111,7 +111,7 @@ export default function CreateTask() {
         )}
 
         <form onSubmit={form.onSubmit(handleSubmit)}>
-          <Stack gap="md">
+          <Stack gap="xl">
             <TextInput
               label="Task Title"
               placeholder="What needs to be done?"
@@ -215,8 +215,8 @@ export default function CreateTask() {
 
             <Group
               justify="flex-end"
-              mt="xl"
-              pt="md"
+              mt={40}
+              pt="xl"
               style={{
                 borderTop: "1px solid var(--mantine-color-default-border)",
               }}

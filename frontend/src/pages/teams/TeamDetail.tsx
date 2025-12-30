@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { teamService } from "../../api";
 import { ROUTES } from "../../config/routes";
@@ -55,18 +55,7 @@ export default function TeamDetail() {
     }
   }, [currentUser, authLoading, navigate]);
 
-  // Re-fetch function
-  const refreshTeam = () => {
-    if (id) fetchTeam();
-  };
-
-  useEffect(() => {
-    if (id) {
-      fetchTeam();
-    }
-  }, [id]);
-
-  const fetchTeam = async () => {
+  const fetchTeam = useCallback(async () => {
     if (!id) return;
 
     setLoading(true);
@@ -83,7 +72,16 @@ export default function TeamDetail() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
+
+  // Re-fetch function
+  const refreshTeam = useCallback(() => {
+    fetchTeam();
+  }, [fetchTeam]);
+
+  useEffect(() => {
+    fetchTeam();
+  }, [fetchTeam]);
 
   const handleDelete = async () => {
     if (!id || !confirm("Are you sure you want to delete this team?")) return;
@@ -188,14 +186,13 @@ export default function TeamDetail() {
   const membersCount = Array.isArray(team.members) ? team.members.length : 0;
   const projectsCount = Array.isArray(team.projects) ? team.projects.length : 0;
 
-  // Use optional chaining for safety
   const isOwner =
     team?.owner?._id && currentUser?._id
       ? team.owner._id === currentUser._id
       : false;
 
   return (
-    <Stack gap="lg">
+    <Stack gap={40}>
       <AddMemberModal
         opened={addMemberOpen}
         onClose={() => setAddMemberOpen(false)}
@@ -308,7 +305,9 @@ export default function TeamDetail() {
                       const projectObj =
                         typeof project === "object" ? project : null;
                       const projectId =
-                        typeof project === "string" ? project : project._id;
+                        typeof project === "string"
+                          ? project
+                          : (project as unknown as Project)._id;
                       return (
                         <Paper
                           key={index}
@@ -349,9 +348,11 @@ export default function TeamDetail() {
                 >
                   Invite Members
                 </Button>
-                <Button variant="outline" fullWidth>
-                  Create Project
-                </Button>
+                <Link to={ROUTES.CREATE_PROJECT}>
+                  <Button variant="outline" fullWidth>
+                    Create Project
+                  </Button>
+                </Link>
               </Stack>
             </Card>
           </Stack>

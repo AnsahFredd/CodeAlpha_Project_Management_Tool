@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useProjects } from "../../hooks/useProjects";
 import { ROUTES } from "../../config/routes";
@@ -32,13 +32,7 @@ export default function EditProject() {
   const [isFetching, setIsFetching] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (id) {
-      fetchProject();
-    }
-  }, [id]);
-
-  const fetchProject = async () => {
+  const fetchProject = useCallback(async () => {
     if (!id) return;
     setIsFetching(true);
     try {
@@ -55,12 +49,18 @@ export default function EditProject() {
           ? new Date(project.endDate).toISOString().split("T")[0]
           : "",
       });
-    } catch (err) {
+    } catch {
       setError("Failed to load project details.");
     } finally {
       setIsFetching(false);
     }
-  };
+  }, [id]);
+
+  useEffect(() => {
+    if (id) {
+      fetchProject();
+    }
+  }, [id, fetchProject]);
 
   const validate = (): boolean => {
     const newErrors: Partial<ProjectForm> = {};
@@ -107,7 +107,7 @@ export default function EditProject() {
   if (isFetching) return <Loading fullScreen text="Loading project..." />;
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
+    <div className="max-w-3xl mx-auto space-y-10 py-4">
       <div className="flex items-center gap-4">
         <Link to={ROUTES.PROJECT_DETAIL(id!)}>
           <Button variant="ghost" size="sm">
@@ -135,8 +135,8 @@ export default function EditProject() {
           </Alert>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <form onSubmit={handleSubmit} className="space-y-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-8">
             <div className="md:col-span-2">
               <Input
                 label="Project Name"
@@ -219,7 +219,7 @@ export default function EditProject() {
             />
           </div>
 
-          <div className="flex items-center justify-end gap-4 pt-6 border-t border-border-color">
+          <div className="flex items-center justify-end gap-4 pt-10 border-t border-border-color mt-4">
             <Link to={ROUTES.PROJECT_DETAIL(id!)}>
               <Button type="button" variant="ghost">
                 Cancel
