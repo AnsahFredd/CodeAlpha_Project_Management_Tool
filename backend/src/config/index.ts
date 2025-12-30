@@ -8,7 +8,8 @@ const config = {
   mongodbUri:
     process.env.MONGODB_URI ||
     "mongodb://localhost:27017/project-management-tool",
-  jwtSecret: process.env.JWT_SECRET || "fallback_secret_for_development_only",
+  jwtSecret:
+    process.env.JWT_ACCESS_SECRET || "fallback_secret_for_development_only",
   frontendUrl: process.env.FRONTEND_URL || "http://localhost:3000",
 
   cloudinary: {
@@ -29,7 +30,7 @@ const config = {
 if (config.env === "production") {
   const criticalVars = [
     "MONGODB_URI",
-    "JWT_SECRET",
+    "JWT_ACCESS_SECRET",
     "CLOUDINARY_CLOUD_NAME",
     "CLOUDINARY_API_KEY",
     "CLOUDINARY_API_SECRET",

@@ -44,7 +44,7 @@ A modern, production-ready project management application built with React, Mant
    ```bash
    cd backend
    npm install
-   # Create .env with MONGODB_URI and JWT_SECRET
+   # Create .env with MONGODB_URI and JWT_ACCESS_SECRET
    npm run dev
    ```
 3. **Frontend Setup**:
