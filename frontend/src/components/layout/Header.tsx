@@ -23,9 +23,8 @@ export default function Header({ onMenuClick }: HeaderProps) {
   return (
     <header className="glass-panel sticky top-0 z-sticky border-b border-border-color h-16 transition-all duration-200">
       <div className="h-full px-4 lg:px-8 flex items-center justify-between gap-4">
-        {/* Left Section: Menu & Logo */}
+       
         <div className="flex items-center gap-3">
-          {/* Mobile Menu Toggle */}
           <button
             onClick={onMenuClick}
             className="p-2 lg:hidden rounded-md text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-colors"
@@ -34,7 +33,6 @@ export default function Header({ onMenuClick }: HeaderProps) {
             <Menu className="h-5 w-5" />
           </button>
 
-          {/* Logo */}
           <div
             className="flex items-center gap-2.5 cursor-pointer group"
             onClick={() => navigate(ROUTES.DASHBOARD)}
@@ -48,7 +46,6 @@ export default function Header({ onMenuClick }: HeaderProps) {
           </div>
         </div>
 
-        {/* Search Bar - Hidden on mobile, visible on tablet+ */}
         <div className="hidden md:flex flex-1 max-w-md mx-4">
           <div className="relative w-full group">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-text-tertiary group-focus-within:text-primary transition-colors" />
@@ -60,7 +57,6 @@ export default function Header({ onMenuClick }: HeaderProps) {
           </div>
         </div>
 
-        {/* Right Side Actions */}
         <div className="flex items-center gap-2 sm:gap-3">
           <button
             onClick={toggleTheme}
@@ -84,7 +80,6 @@ export default function Header({ onMenuClick }: HeaderProps) {
 
           <div className="h-6 w-px bg-border-subtle mx-1 hidden sm:block"></div>
 
-          {/* User Profile */}
           {user ? (
             <div className="flex items-center gap-3">
               <div className="hidden sm:block text-right">
@@ -98,7 +93,6 @@ export default function Header({ onMenuClick }: HeaderProps) {
                   {getInitials(user.name)}
                 </button>
 
-                {/* Dropdown Menu (Simplified for now) */}
                 <div className="absolute right-0 top-full mt-2 w-48 py-1 bg-bg-surface border border-border-subtle rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right">
                   <div className="px-4 py-2 border-b border-border-subtle sm:hidden">
                     <p className="text-sm font-semibold text-text-primary">

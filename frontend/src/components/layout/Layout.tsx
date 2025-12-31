@@ -3,9 +3,7 @@ import {
   Burger,
   Group,
   Text,
-  // Avatar,
-  // Menu,
-  // RemovablePasswordInput,
+ 
   ActionIcon,
   useMantineColorScheme,
   useComputedColorScheme,
@@ -44,7 +42,6 @@ export default function Layout() {
                 size="sm"
               />
               <div className="flex items-center gap-2">
-                {/* Placeholder for Logo if needed */}
                 <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
                   <span className="text-white font-bold text-lg">P</span>
                 </div>

@@ -19,7 +19,7 @@ const config = {
   },
 
   email: {
-    service: process.env.EMAIL_SERVICE, // Removed default "gmail" to allow manual SMTP
+    service: process.env.EMAIL_SERVICE,
     host: process.env.MAIL_HOST || process.env.EMAIL_HOST,
     port: parseInt(
       process.env.MAIL_PORT || process.env.EMAIL_PORT || "587",

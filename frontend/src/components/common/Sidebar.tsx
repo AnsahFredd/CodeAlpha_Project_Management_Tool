@@ -15,7 +15,7 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ onClose }: SidebarProps) {
-  useAuth(); // Keeping the hook if it does auth checks
+  useAuth(); 
   const location = useLocation();
   const navigate = useNavigate();
 

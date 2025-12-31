@@ -86,7 +86,6 @@ export default function ProjectDetails({
 
   return (
     <Grid gutter="xl">
-      {/* Main Content */}
       <Grid.Col span={{ base: 12, lg: 8 }}>
         <Stack gap="lg">
           {/* Project Info */}

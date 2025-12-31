@@ -161,7 +161,7 @@ export const addTeamMember = async (
       // Also allow admins or other roles if needed later
     }
 
-    const User = require("../models/User").default; // Dynamic import to avoid cycles if any
+    const User = require("../models/User").default; 
     const userToAdd = await User.findOne({ email });
 
     if (!userToAdd) {
@@ -227,10 +227,7 @@ export const inviteTeamMember = async (
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
-      // If user exists, advise using Add Member or just add them directly?
-      // Let's add them directly for better UX, or return a message.
-      // For now, let's treat it as an invite flow where they surely get an email.
-      // Actually user asked: "For existing users, add them directly and send notification email"
+     
 
       // Check if already member
       const isMember = team.members.some(
@@ -280,7 +277,7 @@ export const inviteTeamMember = async (
     });
 
     // Send email (fire-and-forget)
-    const joinUrl = `${config.frontendUrl}/register?token=${token}`; // Assuming register page handles token
+    const joinUrl = `${config.frontendUrl}/register?token=${token}`; 
 
     emailService
       .sendTeamInvitationEmail(email, team.name, joinUrl, req.user.name)
